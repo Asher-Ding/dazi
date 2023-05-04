@@ -1,0 +1,15 @@
+# Dockerfile.dev
+# docker build -t vue-dev -f Dockerfile.dev .
+# docker run -it --rm -v $(pwd)/:/app -p 8080:8080 vue-dev
+FROM node:16.20.0
+
+WORKDIR '/app'
+
+COPY package.json ./
+RUN npm install
+
+COPY . .
+
+EXPOSE 8080
+
+CMD ["npm", "run", "dev:mp-weixin"]
