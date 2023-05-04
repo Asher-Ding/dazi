@@ -56,9 +56,13 @@ export default Vue.extend({
 </script>
 
 <style scoped>
-.chat-page {}
+.chat-page {
+  display: block;
+}
 
-.messages-list {}
+.messages-list {
+  display: block;
+}
 
 .input-box {
   position: fixed;
