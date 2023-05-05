@@ -43,6 +43,9 @@
 			},
 			"ios": { /* ios打包配置 */},
 			"sdkConfigs": { /* SDK配置 */}
+		},
+		"uniConfig": { /* v3模式 */
+			"type": "vue3"
 		}
 	},
 	"quickapp": { /* 快应用特有相关 */},

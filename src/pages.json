@@ -11,6 +11,12 @@
 			"style": {
 				"navigationBarTitleText": ""
 			}
+		},
+		{
+			"path": "pages/messages",
+			"style": {
+				"navigationBarTitleText": "messages"
+			}
 		}
 	],
 	"globalStyle": {

@@ -5,17 +5,6 @@
         {{ message }}
       </div>
     </div>
-    <div class="input-box">
-      <div class="input">
-        <input type="text" placeholder="输入消息...">
-        <button class="btn-right" open-type="" hover-class="button-hover" @click="sendMessage()">
-          发送
-        </button>
-        <div class="more">
-          <i class="mui-icon mui-icon-paperplane"></i>
-        </div>
-      </div>
-    </div>
   </div>
 </template>
 
@@ -31,12 +20,7 @@ export default Vue.extend({
   },
   computed: {},
   methods: {
-    sendMessage() {
-      if (this.newMessage) {
-        this.messages.push(this.newMessage)
-        this.newMessage = '' // Clear input box
-      }
-    }
+
   },
   watch: {},
 
@@ -56,39 +40,7 @@ export default Vue.extend({
 </script>
 
 <style scoped>
-.chat-page {
-  display: block;
-}
-
 .messages-list {
   display: block;
-}
-
-.input-box {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  background-color: #fff;
-  padding: 10px;
-  box-shadow: 0 -1px 2px rgba(0, 0, 0, 0.15);
-}
-
-.input {
-  display: flex;
-  justify-content: center;
-}
-
-.btn-right {
-  margin-left: 10px;
-  width: 80px;
-  height: 40px;
-  border-radius: 20px;
-  background-color: #50ca83;
-  color: #fff;
-  border: none;
-  outline: none;
-  font-size: 16px;
-  cursor: pointer;
 }
 </style>
