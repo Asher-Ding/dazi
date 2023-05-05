@@ -12,8 +12,10 @@
     </div>
 </template>
   
-<script>
-export default {
+<script lang="ts">
+import { defineComponent } from 'vue';
+
+export default defineComponent({
     name: 'Navbar',
     data() {
         return {
@@ -28,7 +30,7 @@ export default {
             // implement your search logic here
         }
     }
-};
+})
 </script>
   
 <style scoped>

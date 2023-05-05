@@ -2,7 +2,7 @@
   <div class="sendbox">
     <div class="input-box">
       <div class="input">
-        <input type="text" placeholder="输入消息...">
+        <input type="text" placeholder="输入消息..." v-model="newMessage">
         <button class="btn-right" open-type="" hover-class="button-hover" @click="sendMessage()">
           发送
         </button>
@@ -15,37 +15,28 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-export default Vue.extend({
-  name: "sendbox",
+import { defineComponent, ref } from 'vue'
+
+export default defineComponent({
+  name: 'sendbox',
   props: {},
-  data() {
-    return {}
-  },
-  computed: {},
-  methods: {
-    sendMessage() {
-      if (this.newMessage) {
-        this.messages.push(this.newMessage)
-        this.newMessage = '' // Clear input box
+  setup() {
+    const newMessage = ref("")
+    const messages = ref()
+
+    const sendMessage = () => {
+      if (newMessage.value) {
+        messages.value.push(newMessage.value);
+        newMessage.value = '' // Clear input box
       }
     }
-  },
-  watch: {},
-
-  // 组件周期函数--监听组件挂载完毕
-  mounted() { },
-  // 组件周期函数--监听组件数据更新之前
-  beforeUpdate() { },
-  // 组件周期函数--监听组件数据更新之后
-  updated() { },
-  // 组件周期函数--监听组件激活(显示)
-  activated() { },
-  // 组件周期函数--监听组件停用(隐藏)
-  deactivated() { },
-  // 组件周期函数--监听组件销毁之前
-  beforeDestroy() { },
-}) 
+    return {
+      newMessage,
+      messages,
+      sendMessage,
+    }
+  }
+})
 </script>
 
 <style scoped>

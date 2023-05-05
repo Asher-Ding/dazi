@@ -4,3 +4,5 @@ dist
 .dockerignore
 .git
 .gitignore
+.DS_Store
+package-lock.json
