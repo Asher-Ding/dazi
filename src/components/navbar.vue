@@ -24,7 +24,9 @@ export default defineComponent({
     },
     methods: {
         toggleSidebar() {
-            // implement your sidebar toggle logic here
+            uni.navigateTo({
+                url: '/pages/list/list'
+            })
         },
         search() {
             // implement your search logic here

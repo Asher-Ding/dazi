@@ -2,6 +2,7 @@
   "extends": "@vue/tsconfig/tsconfig.json",
   "compilerOptions": {
     "verbatimModuleSyntax": true,
+    "ignoreDeprecations": "5.0",
     "target": "esnext",
     "module": "esnext",
     "strict": true,
