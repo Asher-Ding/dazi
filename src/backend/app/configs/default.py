@@ -7,7 +7,7 @@
 @Version :   0.1.0
 @Contact :   asherding@icloud.com
 @License :   (C)Copyright 2023-2023, Asher Ding
-@Desc    :   None
+@Desc    :   This is the default configuration file.
 '''
 import os
 import sys

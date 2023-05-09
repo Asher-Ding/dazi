@@ -1,0 +1,6 @@
+__title__ = 'dazi'
+__description__ = 'The backend of dazi.'
+__version__ = '0.1.0'
+__author__ = 'Asher Ding'
+__author_email__ = 'asherding@icloud.com'
+__copyright__ = '(c) 2023 by Asher Ding'
