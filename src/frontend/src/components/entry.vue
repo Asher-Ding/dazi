@@ -4,7 +4,7 @@
 <template>
   <div class="entry">
     <uni-icons type="mic" size="30"></uni-icons>
-    <input class="uni-input" focus placeholder="" />
+    <input class="uni-input" focus placeholder="" confirm-type="send" />
     <uni-icons type="fire-filled" size="30"></uni-icons>
     <uni-icons type="plus" size="30"></uni-icons>
 

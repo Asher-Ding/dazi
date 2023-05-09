@@ -4,10 +4,11 @@
 
 FROM node:14
 
-WORKDIR /app
+WORKDIR /frontend
+
+COPY package.json ./
+RUN npm install
 
 COPY . .
-
-RUN npm install 
 
 CMD ["npm","run","dev:mp-weixin"]
