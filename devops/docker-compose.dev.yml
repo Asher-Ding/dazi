@@ -1,11 +1,15 @@
 version: '3'
 # docker-compose -f docker-compose.dev.yml up
+# 运行单个服务
+# docker-compose up -d [my-service]
 services:
   frontend:
     container_name: uniapp
     build: 
       context:  ../src/frontend/
       dockerfile: ../src/frontend/Dockerfile
+    volumes: 
+      - ../src/frontend:/frontend
     command: > 
       sh -c "npm install && npm run dev:mp-weixin"
 
@@ -14,5 +18,7 @@ services:
     build: 
       context:  ../src/backend/
       dockerfile: ../src/backend/Dockerfile
+    volumes:
+      - ../src/backend/app:/backend/src
     command: >
       sh -c "flask run --host=0.0.0.0 --port=5000"

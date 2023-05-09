@@ -1,10 +1,12 @@
-# Dockerfile.dev
+# Dockerfile
 # docker build -t vue-dev -f Dockerfile.dev .
 # docker run -it --rm -v $(pwd)/:/app -p 8080:8080 vue-dev
 
 FROM node:14
 
 WORKDIR /frontend
+
+VOLUME [ "/frontend/src" ]
 
 COPY package.json ./
 RUN npm install
