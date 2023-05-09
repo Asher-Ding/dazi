@@ -5,7 +5,7 @@ services:
     container_name: uniapp-dev
     build: 
       context: .
-      dockerfile: Dockerfile.dev
+      dockerfile: frontend/Dockerfile.dev
     volumes:
       - ".:/app"
     command: ["npm", "run", "dev:mp-weixin"]
