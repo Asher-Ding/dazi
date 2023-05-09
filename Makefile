@@ -7,9 +7,9 @@ help: ## Display the help message
 
 frontend: ## Start frontend server 
 	@echo "Starting frontend server"
-	cd ./devops && docker-compose up frontend
+	@cd ./devops && docker-compose up frontend
 
 backend: ## Start backend server 
 	@echo "Starting backend server"
-	cd ./devops && docker-compose up backend
+	@cd ./devops && docker-compose up backend
 
