@@ -1,13 +1,13 @@
 version: '3'
-# docker-compose -f docker-compose.dev.yml up
+# docker-compose -f docker-compose.yml up
 # 运行单个服务
-# docker-compose up -d [my-service]
+# docker-compose up <service-name>
 services:
   frontend:
     container_name: uniapp
     build: 
       context:  ../src/frontend/
-      dockerfile: ../src/frontend/Dockerfile
+      dockerfile: Dockerfile
     volumes: 
       - ../src/frontend:/frontend
     command: > 
@@ -17,8 +17,8 @@ services:
     container_name: flask
     build: 
       context:  ../src/backend/
-      dockerfile: ../src/backend/Dockerfile
+      dockerfile: Dockerfile
     volumes:
-      - ../src/backend/app:/backend/src
+      - ../src/backend/app:/backend/app
     command: >
-      sh -c "flask run --host=0.0.0.0 --port=5000"
+      sh -c "flask run --host=0.0.0.0 --port=5000 --debugger --reload"
