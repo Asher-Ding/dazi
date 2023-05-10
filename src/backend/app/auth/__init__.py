@@ -7,5 +7,5 @@
 @Version :   0.1.0
 @Contact :   asherding@icloud.com
 @License :   (C)Copyright 2023-2023, Asher Ding
-@Desc    :   用户认证接口
+@Desc    :    存放身份验证相关的代码，包含认证函数、装饰器等
 """

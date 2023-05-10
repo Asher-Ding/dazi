@@ -7,6 +7,6 @@
 @Version :   0.1.0
 @Contact :   asherding@icloud.com
 @License :   (C)Copyright 2023-2023, Asher Ding
-@Desc    :   None
+@Desc    :   包含与聊天相关的代码，包括模型和视图函数
 """
 from . import views
