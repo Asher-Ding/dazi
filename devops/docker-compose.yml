@@ -3,6 +3,37 @@ version: '3'
 # 运行单个服务
 # docker-compose up <service-name>
 services:
+  vault:
+    # TODO：无法通过客户端连接到vault
+    image: vault:latest
+    container_name: vault
+    restart: always
+    environment:
+      VAULT_LOCAL_CONFIG: | # 使用了管道符号 | 将JSON多行配置定义为单个字符串。这使得它更容易阅读和编辑，并且还确保了正确的格式化
+        {
+          "api_addr": "http://127.0.0.1:8200",
+          "listener": [{
+            "tcp": {
+              "address": "127.0.0.1:8200",
+              "tls_disable": true
+            }
+          }],
+          "disable_mlock": false,
+          "ui": true,
+          "storage": {
+            "file": {
+              "path": "/vault/file"
+            }
+          }
+        }
+    volumes:
+      - ../vault:/vault
+    ports:
+      - "8200:8200"
+    command: 
+      - "server"
+    cap_add: # 为了能够使用mlock，需要添加这个权限
+      - IPC_LOCK
   frontend:
     container_name: uniapp
     build: 
@@ -22,3 +53,36 @@ services:
       - ../src/backend/app:/backend/app
     command: >
       sh -c "flask run --host=0.0.0.0 --port=5000 --debugger --reload"
+
+  database:
+    container_name: mongodb
+    image: mongo:6
+    restart: always
+    volumes:
+      - ../database:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+    ports: 
+      - 27017:27017
+
+  mongon-express:
+    container_name: mongo-express
+    image: mongo-express
+    restart: always
+    ports:
+      - 8081:8081
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: root
+      ME_CONFIG_MONGODB_ADMINPASSWORD: example
+      ME_CONFIG_MONGODB_SERVER: database
+      ME_CONFIG_MONGODB_PORT: 27017
+      ME_CONFIG_BASICAUTH_USERNAME: admin
+      ME_CONFIG_BASICAUTH_PASSWORD: admin
+      ME_CONFIG_BASICAUTH_USERNAME_FILE: /run/secrets/me_config_basicauth_username
+      ME_CONFIG_BASICAUTH_PASSWORD_FILE: /run/secrets/me_config_basicauth_password
+    # secrets:
+    #   - me_config_basicauth_username
+    #   - me_config_basicauth_password
+    depends_on:
+      - database
