@@ -1,48 +1,39 @@
-version: '3'
+version: '3.8'
 # docker-compose -f docker-compose.yml up
 # 运行单个服务
 # docker-compose up <service-name>
+# ME_CONFIG_MONGODB_SERVER: mongo 这是一种错误的写法，这种写法尝试给 ME_CONFIG_MONGODB_SERVER 变量赋值为 mongo，而不是使用环境变量的值这将被视为不完整的（无效的）YAML文件，因为键名没有分配任何内容，可能会导致配置出现问题。
+# = 用于分配值，而 : 用于设置默认值
 services:
   vault:
-    # TODO：无法通过客户端连接到vault
-    image: vault:latest
+    image: hashicorp/vault:1.13
     container_name: vault
     restart: always
-    environment:
-      VAULT_LOCAL_CONFIG: | # 使用了管道符号 | 将JSON多行配置定义为单个字符串。这使得它更容易阅读和编辑，并且还确保了正确的格式化
-        {
-          "api_addr": "http://127.0.0.1:8200",
-          "listener": [{
-            "tcp": {
-              "address": "127.0.0.1:8200",
-              "tls_disable": true
-            }
-          }],
-          "disable_mlock": false,
-          "ui": true,
-          "storage": {
-            "file": {
-              "path": "/vault/file"
-            }
-          }
-        }
+
     volumes:
-      - ../vault:/vault
-    ports:
-      - "8200:8200"
-    command: 
-      - "server"
+      - ../vault/logs:/vault/logs
+      - ../vault/file:/vault/file
+      - ./vault/config:/vault/config
+    environment:
+      VAULT_ADDR: http://127.0.0.1:8200 # vault默认地址是https
+    
+    # echo $VAULT_ADDR
     cap_add: # 为了能够使用mlock，需要添加这个权限
       - IPC_LOCK
+    entrypoint: vault server -config=/vault/config/config.hcl
+
+    ports:
+      - "8200:8200"
+      
   frontend:
     container_name: uniapp
     build: 
       context:  ../src/frontend/
       dockerfile: Dockerfile
     volumes: 
-      - ../src/frontend:/frontend
+      - ../src/frontend/src:/frontend/src
     command: > 
-      sh -c "npm install && npm run dev:mp-weixin"
+      sh -c "npm run dev:mp-weixin"
 
   backend:
     container_name: flask
@@ -51,38 +42,68 @@ services:
       dockerfile: Dockerfile
     volumes:
       - ../src/backend/app:/backend/app
+
+    # 配置容器代理，仅开发环境开启
+    # network_mode: host
+
+    environment:
+      DB_USERNAME: /run/secrets/db_username
+      DB_PASSWORD: /run/secrets/db_password
+      DB_NAME: ${DB_NAME}
+    
+    secrets:
+      - db_username
+      - db_password
+
     command: >
       sh -c "flask run --host=0.0.0.0 --port=5000 --debugger --reload"
 
-  database:
-    container_name: mongodb
-    image: mongo:6
-    restart: always
-    volumes:
+  db: # 数据库
+    container_name: mongo
+    image: mongo
+    volumes: 
       - ../database:/data/db
+    restart: always
+
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: example
+      MONGO_INITDB_ROOT_PASSWORD: pass
+      MONGO_INITDB_AUTH_MECHANISM: SCRAM-SHA-1
+      # MONGO_INITDB_DATABASE: ${DB_NAME}
+      # MONOGO_INITDB_DATA_DIR: /data/db
+      # MONOGO_INITDB_USERNAME: admin
+      # MONOGO_INITDB_PASSWORD: 123456
+    secrets:
+      - db_username
+      - db_password
+
     ports: 
       - 27017:27017
 
-  mongon-express:
+  mongo-express: # mongo 的web管理页面
     container_name: mongo-express
     image: mongo-express
+    depends_on:
+      - db
     restart: always
     ports:
       - 8081:8081
+
     environment:
-      ME_CONFIG_MONGODB_ADMINUSERNAME: root
-      ME_CONFIG_MONGODB_ADMINPASSWORD: example
-      ME_CONFIG_MONGODB_SERVER: database
+      ME_CONFIG_MONGODB_SERVER: mongo
       ME_CONFIG_MONGODB_PORT: 27017
-      ME_CONFIG_BASICAUTH_USERNAME: admin
-      ME_CONFIG_BASICAUTH_PASSWORD: admin
-      ME_CONFIG_BASICAUTH_USERNAME_FILE: /run/secrets/me_config_basicauth_username
-      ME_CONFIG_BASICAUTH_PASSWORD_FILE: /run/secrets/me_config_basicauth_password
-    # secrets:
-    #   - me_config_basicauth_username
-    #   - me_config_basicauth_password
-    depends_on:
-      - database
+      ME_CONFIG_MONGODB_ADMINUSERNAME: root
+      ME_CONFIG_MONGODB_ADMINPASSWORD: pass
+    secrets:
+      - db_username
+      - db_password
+
+# docker secrets create my_secret_key 传输密钥
+secrets:
+  # TODO 使用docker secrets传输密钥
+  db_username:  # 数据库用户名
+    file: ./secrets/db_username.txt
+  db_password:  # 数据库密码
+    file: ./secrets/db_password.txt
+
+
