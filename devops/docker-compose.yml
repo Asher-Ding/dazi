@@ -32,6 +32,10 @@ services:
       dockerfile: Dockerfile
     volumes: 
       - ../src/frontend/src:/frontend/src
+
+    environment:
+      NODE_ENV: ${ENV}
+
     command: > 
       sh -c "npm run dev:mp-weixin"
 
@@ -47,6 +51,7 @@ services:
     # network_mode: host
 
     environment:
+      PYTHON_ENV: ${ENV}
       DB_USERNAME: /run/secrets/db_username
       DB_PASSWORD: /run/secrets/db_password
       DB_NAME: ${DB_NAME}
