@@ -9,3 +9,9 @@
 @License :   (C)Copyright 2023-2023, Asher Ding
 @Desc    :   存放与数据库相关的代码和文件
 """
+
+# 创建数据库实例
+from . import Mongo
+
+db = Mongo()
+print(db)

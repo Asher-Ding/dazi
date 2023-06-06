@@ -22,3 +22,9 @@ dist
 *.njsproj
 *.sln
 *.sw?
+
+# Database
+database
+vault
+secrets
+.docker

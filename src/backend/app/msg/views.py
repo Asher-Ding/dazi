@@ -26,7 +26,7 @@ msg = Blueprint("msg", __name__, url_prefix="/msg")
 @msg.route("/get_records", methods=["GET", "POST"])
 def get_records():
     # TODO 编写获取当前主题下的所有留言的内容
-    pass
+    return "hhh"
 
 
 # 发表留言

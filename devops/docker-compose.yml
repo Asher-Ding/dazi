@@ -5,7 +5,7 @@ version: '3.8'
 # ME_CONFIG_MONGODB_SERVER: mongo 这是一种错误的写法，这种写法尝试给 ME_CONFIG_MONGODB_SERVER 变量赋值为 mongo，而不是使用环境变量的值这将被视为不完整的（无效的）YAML文件，因为键名没有分配任何内容，可能会导致配置出现问题。
 # = 用于分配值，而 : 用于设置默认值
 services:
-  vault:
+  vault: # vault 服务
     image: hashicorp/vault:1.13
     container_name: vault
     restart: always
@@ -16,53 +16,14 @@ services:
       - ./vault/config:/vault/config
     environment:
       VAULT_ADDR: http://127.0.0.1:8200 # vault默认地址是https
-    
-    # echo $VAULT_ADDR
+
     cap_add: # 为了能够使用mlock，需要添加这个权限
       - IPC_LOCK
     entrypoint: vault server -config=/vault/config/config.hcl
 
     ports:
       - "8200:8200"
-      
-  frontend:
-    container_name: uniapp
-    build: 
-      context:  ../src/frontend/
-      dockerfile: Dockerfile
-    volumes: 
-      - ../src/frontend/src:/frontend/src
-
-    environment:
-      NODE_ENV: ${ENV}
-
-    command: > 
-      sh -c "npm run dev:mp-weixin"
-
-  backend:
-    container_name: flask
-    build: 
-      context:  ../src/backend/
-      dockerfile: Dockerfile
-    volumes:
-      - ../src/backend/app:/backend/app
-
-    # 配置容器代理，仅开发环境开启
-    # network_mode: host
-
-    environment:
-      PYTHON_ENV: ${ENV}
-      DB_USERNAME: /run/secrets/db_username
-      DB_PASSWORD: /run/secrets/db_password
-      DB_NAME: ${DB_NAME}
-    
-    secrets:
-      - db_username
-      - db_password
-
-    command: >
-      sh -c "flask run --host=0.0.0.0 --port=5000 --debugger --reload"
-
+  
   db: # 数据库
     container_name: mongo
     image: mongo
@@ -72,15 +33,14 @@ services:
 
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: pass
+      MONGO_INITDB_ROOT_PASSWORD: 12345678
       MONGO_INITDB_AUTH_MECHANISM: SCRAM-SHA-1
-      # MONGO_INITDB_DATABASE: ${DB_NAME}
-      # MONOGO_INITDB_DATA_DIR: /data/db
-      # MONOGO_INITDB_USERNAME: admin
-      # MONOGO_INITDB_PASSWORD: 123456
-    secrets:
-      - db_username
-      - db_password
+      MONGO_INITDB_DATABASE: ${DB_NAME}
+      MONOGO_INITDB_USERNAME: admin
+      MONOGO_INITDB_PASSWORD: 123456
+    # secrets:
+    #   - db_username
+    #   - db_password
 
     ports: 
       - 27017:27017
@@ -98,17 +58,65 @@ services:
       ME_CONFIG_MONGODB_SERVER: mongo
       ME_CONFIG_MONGODB_PORT: 27017
       ME_CONFIG_MONGODB_ADMINUSERNAME: root
-      ME_CONFIG_MONGODB_ADMINPASSWORD: pass
-    secrets:
-      - db_username
-      - db_password
+      ME_CONFIG_MONGODB_ADMINPASSWORD: 12345678
+    # secrets:
+    #   - db_username
+    #   - db_password
+      
+  frontend: # 前端
+    container_name: uniapp
+    build: # 构建镜像
+      context:  ../src/frontend/
+      dockerfile: Dockerfile
+    volumes: # 挂载目录
+      - ../src/frontend/src:/frontend/src
+
+    environment: # 环境变量
+      NODE_ENV: ${ENV}
+
+    # 请打开Wechat Devtools 进行调试
+    command: > 
+      sh -c "npm run dev:mp-weixin" 
+
+  backend: # 后端
+    container_name: flask
+    build: 
+      context:  ../src/backend/
+      dockerfile: Dockerfile
+    volumes: # 挂载目录
+      - ../src/backend/app:/backend/app
+
+    # 配置容器代理，仅开发环境开启
+    network_mode: host
+
+    environment:
+      PYTHON_ENV: ${ENV} # python环境
+      DB_USERNAME: /run/secrets/db_username # 数据库用户名
+      DB_PASSWORD: /run/secrets/db_password # 数据库密码
+      DB_NAME: ${DB_NAME} # 数据库名
+    
+    # secrets:
+    #   - db_username
+    #   - db_password
+
+    command: >
+      sh -c "flask run --host=0.0.0.0 --port=5000 --debugger --reload"
 
 # docker secrets create my_secret_key 传输密钥
 secrets:
   # TODO 使用docker secrets传输密钥
-  db_username:  # 数据库用户名
-    file: ./secrets/db_username.txt
-  db_password:  # 数据库密码
-    file: ./secrets/db_password.txt
+  # db_username:  # 数据库用户名
+  #   file: ./secrets/db_username.txt
+  # db_password:  # 数据库密码
+  #   file: ./secrets/db_password.txt
+
+  db_username:
+    external: 
+      name: db_username
+  db_password:
+    external: 
+      name: db_password
+
+
 
 

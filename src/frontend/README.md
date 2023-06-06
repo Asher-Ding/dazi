@@ -1,4 +1,4 @@
-# random-forest
+# 随机森林-前端
 
 ## Project setup
 
@@ -18,6 +18,6 @@ npm run serve
 npm run build
 ```
 
-### Customize configuration
+### 自定义配置
 
-See [Configuration Reference](https://cli.vuejs.org/config/).
+参考 [Configuration Reference](https://cli.vuejs.org/config/).

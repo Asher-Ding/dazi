@@ -12,8 +12,13 @@
 # 导入必要的模块和依赖项
 from flask import Flask
 
+# from flasgger import Swagger
+
 # 创建应用程序实例
 app = Flask("DAZIX")
+# 初始化Swagger
+# swagger = Swagger(app)
+# flasgger have some bugs needed to be fixed
 
 # 配置应用程序
 app.config.from_object("app.configs.default.DefaultConfig")
