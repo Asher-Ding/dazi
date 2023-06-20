@@ -16,6 +16,8 @@ from flask.views import MethodView
 
 chat = Blueprint("chat", __name__, url_prefix="/chat")
 
+# [ ] 定义一个获取records的API，并能通过postman获取到数据
+# [ ] 定义一个添加records的API，并能通过postman添加数据
 
 class RecordAPI(MethodView):
     def get(self, chat_id):

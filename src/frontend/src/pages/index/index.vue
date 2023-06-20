@@ -1,115 +1,116 @@
 <template>
   <div class="index">
-    <!-- 导航栏 -->
-    <uni-nav-bar :fixed="true" shadow leftText="列表" leftIcon="chatboxes-filled" statusBar="true" @clickLeft="showDrawer">
+    <!-- 导航栏，点击导航后，左侧弹出抽屉 -->
+    <uni-nav-bar :fixed="true" shadow leftText="{{ username }}" leftIcon="chatboxes" statusBar="true" @clickLeft="showDrawer">
     </uni-nav-bar>
 
-    <!-- 抽屉 -->
+    <!-- 左侧抽屉菜单 -->
     <uni-drawer ref="showLeft" mode="left" :width="280" :mask-click="ture">
       <scroll-view style="height: 60%;" scroll-y="true">
         <!-- 占位符 -->
         <view style="margin-top: 16%"></view>
         <!-- 个人信息 -->
         <view style="display: flex; align-items: center; padding: 8px; border-bottom: 1px solid gray;">
-          <uni-icons type="vip-filled" size="30"></uni-icons>
-          <text style="margin-left: 10px; font-size: 18px;">搭子</text>
+          <!-- 图标 -->
+          <uni-icons type="chatboxes" size="20"></uni-icons>
+          <!-- 标题内容 -->
+          <text style="margin-left: 10px; font-size: 14px;">我的搭子</text>
         </view>
-        <uni-list>
-          <uni-list :border="true">
-            <!-- 显示圆形头像 -->
-            <uni-list-chat :avatar-circle="true" title="uni-app"
+        <!-- 搭子列表 -->
+        <!-- TODO 从服务端获取对话列表 -->
+        <uni-list :border="true">
+          <!-- 显示圆形头像 -->
+          <!-- <uni-list-chat :avatar-circle="true" title="uni-app"
               avatar="https://web-assets.dcloud.net.cn/unidoc/zh/unicloudlogo.png" note="您收到一条新的消息"
-              time="2020-02-02 20:20"></uni-list-chat>
-            <!-- 右侧带角标 -->
-            <uni-list-chat title="uni-app" avatar="https://web-assets.dcloud.net.cn/unidoc/zh/unicloudlogo.png"
-              note="您收到一条新的消息" time="2020-02-02 20:20" badge-text="12"></uni-list-chat>
-            <!-- 头像显示圆点 -->
-            <uni-list-chat title="uni-app" avatar="https://web-assets.dcloud.net.cn/unidoc/zh/unicloudlogo.png"
-              note="您收到一条新的消息" time="2020-02-02 20:20" badge-positon="left" badge-text="dot"></uni-list-chat>
-            <!-- 头像显示角标 -->
-            <uni-list-chat title="uni-app" avatar="https://web-assets.dcloud.net.cn/unidoc/zh/unicloudlogo.png"
-              note="您收到一条新的消息" time="2020-02-02 20:20" badge-positon="left" badge-text="99"></uni-list-chat>
-            <!-- 显示多头像 -->
-            <uni-list-chat title="uni-app" :avatar-list="avatarList" note="您收到一条新的消息" time="2020-02-02 20:20"
-              badge-positon="left" badge-text="dot"></uni-list-chat>
-            <!-- 自定义右侧内容 -->
-            <uni-list-chat title="uni-app" :avatar-list="avatarList" note="您收到一条新的消息" time="2020-02-02 20:20"
+              time="2020-02-02 20:20"></uni-list-chat> -->
+          <!-- 右侧带角标 -->
+          <!-- <uni-list-chat title="uni-app" avatar="https://web-assets.dcloud.net.cn/unidoc/zh/unicloudlogo.png"
+              note="您收到一条新的消息" time="2020-02-02 20:20" badge-text="12"></uni-list-chat> -->
+          <!-- 头像显示圆点 -->
+          <!-- <uni-list-chat title="uni-app" avatar="https://web-assets.dcloud.net.cn/unidoc/zh/unicloudlogo.png"
+              note="您收到一条新的消息" time="2020-02-02 20:20" badge-positon="left" badge-text="dot"></uni-list-chat> -->
+          <!-- 头像显示角标 -->
+          <!-- <uni-list-chat title="uni-app" avatar="https://web-assets.dcloud.net.cn/unidoc/zh/unicloudlogo.png"
+              note="您收到一条新的消息" time="2020-02-02 20:20" badge-positon="left" badge-text="99"></uni-list-chat> -->
+          <!-- 显示多头像 -->
+          <!-- <uni-list-chat title="uni-app" :avatar-list="avatarList" note="您收到一条新的消息" time="2020-02-02 20:20"
+              badge-positon="left" badge-text="dot"></uni-list-chat> -->
+          <!-- 自定义右侧内容 -->
+          <!-- <uni-list-chat title="uni-app" :avatar-list="avatarList" note="您收到一条新的消息" time="2020-02-02 20:20"
               badge-positon="left" badge-text="dot">
               <view class="chat-custom-right">
                 <text class="chat-custom-text">刚刚</text>
-                <!-- 需要使用 uni-icons 请自行引入 -->
                 <uni-icons type="star-filled" color="#999" size="18"></uni-icons>
               </view>
-            </uni-list-chat>
-          </uni-list>
+            </uni-list-chat> -->
         </uni-list>
         <!-- <view v-for="item in 1" :key="item">可滚动内容 {{ item }}</view> -->
       </scroll-view>
     </uni-drawer>
-    <!-- <Navbar></Navbar> -->
-    <!-- <Chatpage></Chatpage> -->
 
-    <uni-card title="基础卡片" sub-title="副标题" extra="额外信息" :thumbnail="avatar" @click="onClick">
-      <text class="uni-body">这是一个带头像和双标题的基础卡片，此示例展示了一个完整的卡片。</text>
-    </uni-card>
+    <!-- 对话内容 -->
+    <!-- 从服务端获取本页数据 -->
+    <scroll-view class="" scroll-x="false" scroll-y="false" upper-threshold="50" lower-threshold="50" scroll-top="0"
+      scroll-left="0" scroll-into-view="" scroll-with-animation="false" enable-back-to-top="false" bindscrolltoupper=""
+      bindscrolltolower="" bindscroll="">
+      <!-- [ ]从服务器获取聊天数据
+                1. 基于LBS定位信息获取，所以需要上传位置信息
+      -->
+      <uni-card title="基础卡片" sub-title="副标题" extra="额外信息" :thumbnail="avatar" @click="onClick">
+        <text class="uni-body">这是一个带头像和双标题的基础卡片，此示例展示了一个完整的卡片。</text>
+      </uni-card>
 
-    <uni-card title="基础卡片" sub-title="副标题" extra="额外信息" :thumbnail="avatar" @click="onClick">
-      <text class="uni-body">这是一个带头像和双标题的基础卡片，此示例展示了一个完整的卡片。</text>
-    </uni-card>
+      <uni-card title="基础卡片" sub-title="副标题" extra="额外信息" :thumbnail="avatar" @click="onClick">
+        <text class="uni-body">这是一个带头像和双标题的基础卡片，此示例展示了一个完整的卡片。</text>
+      </uni-card>
 
+      <Bulletin></Bulletin>
 
-    <Bulletin></Bulletin>
-    <!-- <SendBox></SendBox> -->
+    </scroll-view>
     <Entry></Entry>
   </div>
 </template>
 
 <script lang="ts" setup>
-// import SendBox from '@/components/sendbox.vue';
-// import Navbar from '@/components/navbar.vue';
-// import Chatpage from '@/components/chatpage.vue';
 import Bulletin from '@/components/card/bulletin.vue';
 import Entry from '@/components/entry.vue'
-import { getCurrentInstance } from 'vue';
+// Vue3 不再支持this的用法
+import { getCurrentInstance, onBeforeMount } from 'vue';
 
-const ctx = getCurrentInstance().ctx
+// import { login } from '@/api/user'
+
 // 这里的ctx等于vue2里面的 this
+// BUG
+const ctx = getCurrentInstance().ctx
+const username = ''
+
+
+// 获取当前的位置信息
+uni.getLocation({ // Doc: https://uniapp.dcloud.net.cn/api/location/location.html
+  type: 'wgs84',
+  success: (res) => {
+    const gps = res
+  },
+})
+
+// [ ] 上传服务器当前位置信息，并拉取附近的聊天记录 
 
 
 
-// TODO: 需要解决导航栏的按键绑定问题
-function showDrawer(e) {
+// [x] 解决导航栏的按键绑定问题
+function showDrawer() {
+  // 打开抽屉
   ctx.$refs.showLeft.open()
-  // console.log(instance.ctx.$refs.showRight)
-  // console.log('showDrawer')
-}
-function closeDrawer() {
-  console.log('closeDrawer')
 }
 
-const avatarList = [{
-  url: 'https://web-assets.dcloud.net.cn/unidoc/zh/unicloudlogo.png'
-}, {
-  url: 'https://web-assets.dcloud.net.cn/unidoc/zh/unicloudlogo.png'
-}, {
-  url: 'https://web-assets.dcloud.net.cn/unidoc/zh/unicloudlogo.png'
-}]
-
-
-// onUnload(() => {
-//   // 多端发布时，请进行判断
-//   uni.navigateTo({
-//     url: '/pages/list/list'
-//   })
-// })
-
-// onNavigationBarButtonTap(() => {
-//   console.log('click')
-// })
-
-// onBackPress(() => {
-//   console.log(e)
-// })
+// [ ] 测试数据
+// const avatarList = [{
+//   url: 'https://web-assets.dcloud.net.cn/unidoc/zh/unicloudlogo.png'
+// }, {
+//   url: 'https://web-assets.dcloud.net.cn/unidoc/zh/unicloudlogo.png'
+// }, {
+//   url: 'https://web-assets.dcloud.net.cn/unidoc/zh/unicloudlogo.png'
+// }]
 
 
 </script>

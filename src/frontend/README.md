@@ -21,3 +21,10 @@ npm run build
 ### 自定义配置
 
 参考 [Configuration Reference](https://cli.vuejs.org/config/).
+
+## 环境配置
+
+### VSCode
+
+page.json 忽略注释
+点击Vscode右下角的选择，选择Json with comments

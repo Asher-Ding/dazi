@@ -45,7 +45,7 @@ services:
     ports: 
       - 27017:27017
 
-  mongo-express: # mongo 的web管理页面
+  mongo-express: # mongo 的web管理页面 http://localhost:8081
     container_name: mongo-express
     image: mongo-express
     depends_on:

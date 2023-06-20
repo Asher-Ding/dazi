@@ -37,6 +37,24 @@ class ChatRoom(mongo.Document):
     meta = {"collection": "chat_rooms"}
 
 
+# [ ] 获取数据库records中的所有内容，按时间排序
+class Records(mongo.Document):
+    """聊天记录"""
+
+    chat_id = mongo.StringField(max_length=64, required=True)
+    user_id = mongo.StringField(max_length=64, required=True)
+    user_name = mongo.StringField(max_length=64, required=True)
+    user_avatar = mongo.StringField(max_length=64, required=True)
+    content = mongo.StringField(max_length=64, required=True)
+    type = mongo.StringField(max_length=64, required=True)
+    attachments = mongo.ListField(mongo.StringField(max_length=64), required=True)
+
+    meta = {"collection": "records"}
+
+    def __str__(self):
+        return f"<Records {self.user_name}>"
+
+
 class ChatRecord(mongo.Document):
     """聊天记录"""
 
