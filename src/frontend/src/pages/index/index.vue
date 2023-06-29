@@ -1,7 +1,7 @@
 <template>
   <div class="index">
     <!-- 导航栏，点击导航后，左侧弹出抽屉 -->
-    <uni-nav-bar :fixed="true" shadow leftText="{{ username }}" leftIcon="chatboxes" statusBar="true" @clickLeft="showDrawer">
+    <uni-nav-bar :fixed="true" shadow :leftText="nickName" :leftIcon="avatar" statusBar="true" @clickLeft="showDrawer">
     </uni-nav-bar>
 
     <!-- 左侧抽屉菜单 -->
@@ -75,23 +75,53 @@
 import Bulletin from '@/components/card/bulletin.vue';
 import Entry from '@/components/entry.vue'
 // Vue3 不再支持this的用法
-import { getCurrentInstance, onBeforeMount } from 'vue';
+import { getCurrentInstance, onBeforeMount, ref } from 'vue';
 
 // import { login } from '@/api/user'
+import { message } from '@/api/index'
 
 // 这里的ctx等于vue2里面的 this
 // BUG
 const ctx = getCurrentInstance().ctx
-const username = ''
+const nickName = ref('')
+const avatar = ref('')
+const messageList = ref([])
 
-
-// 获取当前的位置信息
-uni.getLocation({ // Doc: https://uniapp.dcloud.net.cn/api/location/location.html
+// 获取当前的位置信息 https://uniapp.dcloud.net.cn/api/location/location.html
+uni.getLocation({
   type: 'wgs84',
   success: (res) => {
-    const gps = res
+    const pos = String(res)
+    message.getMessageList('pos').then((res: any) => {
+      console.log(res)
+      messageList.value = res.data
+    })
   },
 })
+
+
+uni.login({
+  provider: "weixin",
+  onlyAuthorize: true,
+  success: (res) => {
+    console.log(res);
+    const code = res.code // 临时登录凭证
+    console.log("[CODE] " + code)
+  },
+  fail: (fail) => {
+    console.log("[FAIL] " + fail)
+  },
+});
+
+// https://uniapp.dcloud.net.cn/api/plugins/login.html#getuserinfo
+uni.getUserInfo({
+  success(result) {
+    console.log(result);
+    nickName.value = result.userInfo.nickName // 用户昵称
+    avatar.value = result.userInfo.avatarUrl // 用户头像图片 url
+    // console.log('nickname: ' + nickName.value);
+  },
+});
 
 // [ ] 上传服务器当前位置信息，并拉取附近的聊天记录 
 

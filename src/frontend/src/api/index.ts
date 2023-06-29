@@ -1,35 +1,25 @@
 /**
- * @fileOverview 基础文件，对axios进行封装，添加拦截器等
+ * @fileOverview 消息
  * @author asherding@icloud.com
  * @version 1.0
  */
 
-const baseURL = process.env.NODE_ENV === 'production' ? 'https://api.example.com' : 'http://localhost:3000';
+// import instance from './index'
+const baseURL = process.env.NODE_ENV === 'production' ? 'https://api.example.com' : 'https://d391b1a3-5728-4973-97d3-9ced6a5b20cd.mock.pstmn.io';
 
-// [ ] 封装拦截器API接口
-const instance = uni.create({
-    baseURL,
-    timeout: 1000, //set timeout
-})
-
-function errorHandler(error: any) {
-    if (error.response) {
-        console.error('error.response', error.response)
-    } else if (error.request) {
-        console.error('error.request', error.request)
+// [ ] 定义api接口
+export const message = {
+    getMessageList(position: string) {
+        uni.request({
+            url: baseURL + `/message?location=${position}`, //仅为示例，并非真实接口地址。
+            method: 'GET' ,
+            success: (res) => {
+                console.log(res.data);
+                // 打印： {code:1,...}
+            }
+        })
+        return 'ff'
     }
-    return Promise.reject(error)
 }
-// request interceptor
-instance.interceptors.request.use(config => {
-    // do something before request is sent
-    return config
-}, errorHandler)
 
-// response interceptor
-instance.interceptors.response.use(response => {
-    // do something with response data
-    return response
-}, errorHandler)
 
-export default instance
