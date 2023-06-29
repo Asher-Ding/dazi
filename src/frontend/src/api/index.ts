@@ -1,5 +1,5 @@
 /**
- * @fileOverview 消息
+ * @fileOverview API接口
  * @author asherding@icloud.com
  * @version 1.0
  */
@@ -14,12 +14,10 @@ export const message = {
             url: baseURL + `/message?location=${position}`, //仅为示例，并非真实接口地址。
             method: 'GET' ,
             success: (res) => {
-                console.log(res.data);
+                // console.log(res.data);
                 // 打印： {code:1,...}
+                return res.data
             }
         })
-        return 'ff'
     }
 }
-
-

@@ -56,15 +56,20 @@
       <!-- [ ]从服务器获取聊天数据
                 1. 基于LBS定位信息获取，所以需要上传位置信息
       -->
-      <uni-card title="基础卡片" sub-title="副标题" extra="额外信息" :thumbnail="avatar" @click="onClick">
+      <!-- <uni-card title="基础卡片" sub-title="副标题" extra="额外信息" :thumbnail="avatar" @click="onClick">
         <text class="uni-body">这是一个带头像和双标题的基础卡片，此示例展示了一个完整的卡片。</text>
+      </uni-card> -->
+
+      <!-- <uni-card title="基础卡片" sub-title="副标题" extra="额外信息" :thumbnail="avatar" @click="onClick">
+        <text class="uni-body">这是一个带头像和双标题的基础卡片，此示例展示了一个完整的卡片。</text>
+      </uni-card> -->
+
+      <uni-card v-for="(item, index) in messageList" :key="index" :title="item.title" :sub-title="item.subTitle"
+        :extra="item.extra" :thumbnail="item.avatar" @click="onClick(item)">
+        <text class="uni-body">{{ item.content }}</text>
       </uni-card>
 
-      <uni-card title="基础卡片" sub-title="副标题" extra="额外信息" :thumbnail="avatar" @click="onClick">
-        <text class="uni-body">这是一个带头像和双标题的基础卡片，此示例展示了一个完整的卡片。</text>
-      </uni-card>
-
-      <Bulletin></Bulletin>
+      <!-- <Bulletin></Bulletin> -->
 
     </scroll-view>
     <Entry></Entry>
@@ -77,8 +82,9 @@ import Entry from '@/components/entry.vue'
 // Vue3 不再支持this的用法
 import { getCurrentInstance, onBeforeMount, ref } from 'vue';
 
+// TODO 封装接口
 // import { login } from '@/api/user'
-import { message } from '@/api/index'
+// import { message } from '@/api/index'
 
 // 这里的ctx等于vue2里面的 this
 // BUG
@@ -86,15 +92,21 @@ const ctx = getCurrentInstance().ctx
 const nickName = ref('')
 const avatar = ref('')
 const messageList = ref([])
+const baseURL = process.env.NODE_ENV === 'production' ? 'https://api.example.com' : 'https://d391b1a3-5728-4973-97d3-9ced6a5b20cd.mock.pstmn.io';
 
 // 获取当前的位置信息 https://uniapp.dcloud.net.cn/api/location/location.html
 uni.getLocation({
   type: 'wgs84',
   success: (res) => {
     const pos = String(res)
-    message.getMessageList('pos').then((res: any) => {
-      console.log(res)
-      messageList.value = res.data
+    uni.request({
+      url: baseURL + `/message?location=${pos}`, //仅为示例，并非真实接口地址。
+      method: 'GET',
+      success: (res) => {
+        const data: any = res.data
+        console.log(data);
+        messageList.value = data.messages
+      }
     })
   },
 })
