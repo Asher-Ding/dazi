@@ -65,7 +65,7 @@
       </uni-card> -->
 
       <uni-card v-for="(item, index) in messageList" :key="index" :title="item.title" :sub-title="item.subTitle"
-        :extra="item.extra" :thumbnail="item.avatar" @click="onClick(item)">
+        :extra="item.extra" :thumbnail="item.avatar" @click="msgDetail(item.message_id)">
         <text class="uni-body">{{ item.content }}</text>
       </uni-card>
 
@@ -98,8 +98,9 @@ const baseURL = process.env.NODE_ENV === 'production' ? 'https://api.example.com
 uni.getLocation({
   type: 'wgs84',
   success: (res) => {
-    const pos = String(res)
-    uni.request({
+    const pos = String(res.longitude) + ',' + String(res.latitude)
+    console.log('pos:' + pos)
+    uni.request({ // 获取信息列表
       url: baseURL + `/message?location=${pos}`, //仅为示例，并非真实接口地址。
       method: 'GET',
       success: (res) => {
@@ -143,6 +144,14 @@ uni.getUserInfo({
 function showDrawer() {
   // 打开抽屉
   ctx.$refs.showLeft.open()
+}
+
+function msgDetail(id){
+  console.log('msg_id: ' + id)
+  // 跳转到消息详情页
+  uni.navigateTo({
+    url: '../message/index?id=' + id
+  })
 }
 
 // [ ] 测试数据

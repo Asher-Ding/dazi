@@ -18,12 +18,6 @@
 			}
 		},
 		{
-			"path": "pages/messages",
-			"style": {
-				"navigationBarTitleText": "消息"
-			}
-		},
-		{
 			"path": "pages/list/list",
 			"style": {
 				"navigationBarTitleText": "列表"
@@ -34,6 +28,12 @@
 			"style": {
 				"navigationBarTitleText": "drawer"
 			}
+		},
+		{
+			"path": "pages/message/index",
+			"style": {
+				"navigationBarTitleText": "message"
+			}
 		}
 	],
 	"globalStyle": {
@@ -41,6 +41,5 @@
 		"navigationBarTitleText": "uni-app",
 		"navigationBarBackgroundColor": "#F8F8F8",
 		"backgroundColor": "#F8F8F8"
-	},
-	"subPackages": []
+	}
 }
